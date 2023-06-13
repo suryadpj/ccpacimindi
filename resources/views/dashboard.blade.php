@@ -55,7 +55,7 @@
                     <!--begin::Item-->
                     <div class="d-flex flex-column">
                         <!--begin::Number-->
-                        <span class="text-white fw-bold fs-3 mb-1">23,467</span>
+                        <span class="text-white fw-bold fs-3 mb-1">{{ $hitung_pengguna }}</span>
                         <!--end::Number-->
                         <!--begin::Section-->
                         <div class="text-white opacity-50 fw-bold">Total Customer</div>
@@ -65,7 +65,7 @@
                     <!--begin::Item-->
                     <div class="d-flex flex-column">
                         <!--begin::Number-->
-                        <span class="text-white fw-bold fs-3 mb-1">20,000</span>
+                        <span class="text-white fw-bold fs-3 mb-1">{{ $hitung_kendaraan }}</span>
                         <!--end::Number-->
                         <!--begin::Section-->
                         <div class="text-white opacity-50 fw-bold">Today Kendaraan</div>
