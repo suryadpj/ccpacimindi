@@ -173,7 +173,7 @@
                                         <div class="d-flex align-items-center">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
                                             <i class="bi bi-car-front fs-5 text-dark"></i>
-                                            &nbsp; <div class="fs-2 fw-bold" data-kt-countup="true" data-kt-countup-value="4" data-kt-countup-sufflix="$">0</div>
+                                            &nbsp; <div class="fs-2 fw-bold" data-kt-countup="true" data-kt-countup-value="{{ $hitung }}" data-kt-countup-sufflix="$">0</div>
                                         </div>
                                         <!--end::Number-->
                                         <!--begin::Label-->
@@ -351,6 +351,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($friend as $f)
+                                        <tr>
+                                            <td><a href="caridata?search={{ $f->EquipmentNo }}">{{ $f->EquipmentNo }}</a></td>
+                                            <td><a href="caridata?search={{ $f->PoliceRegNo }}">{{ $f->PoliceRegNo }}</a></td>
+                                            <td>{{ $f->TipeKendaraan }}</td>
+                                            <td>{{ $f->TahunProduksi }}</td>
+                                            <td>{{ $f->NextPotency }}</td>
+                                            <td>{{ $f->NextPotency }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
