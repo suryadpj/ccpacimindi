@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function index()
     {
         $hitung_kendaraan = DB::table('masterdata')->count();
-        $hitung_pengguna = DB::table('masterdata')->distinct('Equipment No')->count('Equipment No');
+        $hitung_pengguna = DB::table('masterdata')->distinct('EquipmentNo')->count('EquipmentNo');
         return view('dashboard',['dicari' => '','hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna]);
     }
     public function caridata(request $request)

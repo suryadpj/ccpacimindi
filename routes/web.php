@@ -13,13 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-})->middleware('auth');
-
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/caridata', [App\Http\Controllers\HomeController::class, 'caridata'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::get('/caridata', [App\Http\Controllers\HomeController::class, 'caridata'])->name('home')->middleware('auth');
 Route::get('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('home')->middleware('auth');
