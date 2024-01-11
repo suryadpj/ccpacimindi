@@ -34,11 +34,17 @@ class HomeController extends Controller
     public function caridata(request $request)
     {
         $dicari = $request->search;
-        $find = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('EquipmentNo',$dicari)->orderby('id','desc')->first();
-        $idken = $find->CustomerID;
-  $hitung = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('EquipmentNo',$dicari)->orderby('id','desc')->count();
         $hitung_kendaraan = DB::table('masterdata')->count();
         $hitung_pengguna = DB::table('masterdata')->distinct('EquipmentNo')->count('EquipmentNo');
+        $find = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('EquipmentNo',$dicari)->orderby('id','desc')->first();
+        $find2 = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('EquipmentNo',$dicari)->orderby('id','desc')->count();
+        if($find2 == 0)
+        {
+            $modal = "showalertempty";
+            return view('dashboardsearch',['dicari' => $dicari,'hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'modalempty' => $modal]);
+        }
+        $idken = $find->CustomerID;
+  $hitung = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('EquipmentNo',$dicari)->orderby('id','desc')->count();
         $hitung = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('CustomerID',$idken)->orderby('id','desc')->distinct('PoliceRegNo','EquipmentNo','TipeKendaraan','TahunProduksi','NextPotency')->count();
         $findfriend = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('CustomerID',$idken)->orderby('id','desc')->distinct('PoliceRegNo','EquipmentNo','TipeKendaraan','TahunProduksi','NextPotency')->get();
         $modal = 0;
