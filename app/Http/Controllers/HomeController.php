@@ -30,7 +30,7 @@ class HomeController extends Controller
         $hitung_kendaraan = DB::table('masterdata')->count();
         $hitung_pengguna = DB::table('masterdata')->distinct('EquipmentNo')->count('EquipmentNo');
         $modal = "";
-        return view('dashboard',['dicari' => '','hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'modal' => $modal]);
+        return view('v2.home',['dicari' => '','hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'modal' => $modal]);
     }
     public function caridata(request $request)
     {
@@ -42,7 +42,7 @@ class HomeController extends Controller
         if($find2 == 0)
         {
             $modal = "showalertempty";
-            return view('dashboard',['dicari' => $dicari,'hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'modal' => $modal]);
+            return view('v2.home',['dicari' => $dicari,'hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'modal' => $modal]);
         }
         $idken = $find->CustomerID;
   $hitung = DB::table('masterdata')->where('dummy',$dicari)->orwhere('PoliceRegNo',$dicari)->orwhere('EquipmentNo',$dicari)->orderby('id','desc')->count();
@@ -51,12 +51,12 @@ class HomeController extends Controller
         $modal = 0;
         if($hitung > 0)
         {
-            return view('dashboardsearch',['dicari' => $dicari,'hitung' => $hitung,'hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'find' => $find,'friend' => $findfriend,'modalempty' => $modal]);
+            return view('v2.dashboardsearch',['dicari' => $dicari,'hitung' => $hitung,'hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'find' => $find,'friend' => $findfriend,'modalempty' => $modal]);
         }
         else
         {
             $modal = "showalertempty";
-            return view('dashboardsearch',['dicari' => $dicari,'hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'modalempty' => $modal]);
+            return view('v2.dashboardsearch',['dicari' => $dicari,'hitung_kendaraan' => $hitung_kendaraan,'hitung_pengguna' => $hitung_pengguna,'modalempty' => $modal]);
         }
     }
 }

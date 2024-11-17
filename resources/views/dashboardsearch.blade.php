@@ -43,7 +43,7 @@
                 <div class="page-title d-flex align-items-center me-3">
                     <img alt="Logo" src="assets/media/logos/logo_tunas.png" class="h-60px me-5" />
                     <!--begin::Title-->
-                    <h1 class="page-heading d-flex text-white fw-bolder fs-2 flex-column justify-content-center my-0">Customer Card Peronalize Assistance
+                    <h1 class="page-heading d-flex text-white fw-bolder fs-2 flex-column justify-content-center my-0">Customer Card Identification Tool
                     <!--begin::Description-->
                     <span class="page-desc text-white opacity-50 fs-6 fw-bold pt-4"> Tunas Toyota Cimindi</span>
                     <!--end::Description--></h1>
