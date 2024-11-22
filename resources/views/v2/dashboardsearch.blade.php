@@ -31,10 +31,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>MHKM5EB3JMK032343</td>
-                                <td>D1132SAT</td>
+                                <td>{{ $find->EquipmentNo }}</td>
+                                <td>{{ $find->PoliceRegNo }}</td>
                                 <td> PUNCTUAL</td>
-                                <td> PASIF</td>
+                                <td>{{ $find->InitialStatus }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -124,12 +124,25 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>CM-004634</td>
-                                    <td>JOHANES BERCHMAN LOSE</td>
-                                    <td>45</td>
-                                    <td>AVANZA</td>
-                                    <td>RETAIL</td>
-                                    <td>GOLD</td>
+                                    <td>{{ $find->CustomerID }}</td>
+                                    <td>{{ $find->CustomerName }}</td>
+                                    <td>{{ $find->QttVIN }}</td>
+                                    <td>{{ $find->TipeKendaraan }}</td>
+                                    <td>{{ $find->CustomerType }}</td>
+                                    <td>@switch($find->CustomerClass)
+                                        @case(0)
+                                            BRONZE
+                                        @break
+                                        @case(3)
+                                            BRONZE
+                                        @break
+                                        @case(2)
+                                            SILVER
+                                        @break
+                                        @case(1)
+                                            GOLD
+                                        @break                                           
+                                    @endswitch</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -149,12 +162,12 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>RING 1</td>
-                                    <td>LEMBAH PARAHYANGAN BLOK C-3 RT.005/002 KEL.GADOBANGKONG KEC.NGAMPRAH</td>
+                                    <td>RING @if($find->RingArea > 0) {{ $find->RingArea }} @else 0 @endif</td>
+                                    <td>{{ $find->Address }}</td>
                                     <td>BANDUNG</td>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>Informasi Pdigrogram</td>
+                                    <td>-</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -165,30 +178,26 @@
                             <div class="table-responsive">
                                 <table class="table-hover">
                                     <tbody>
+                                        @if($find->NoTelp)
                                         <tr>
-                                            <td>81313991916</td>
+                                            <td>+{{ $find->NoTelp }}</td>
                                             <td>
-                                                <a class="btn btn-success" href="wahtsapp.com" target="_blank">
+                                                <a class="btn btn-primary" href="tel:+{{ $find->NoTelp }}" target="_blank">
+                                                    <i class="bi bi-telephone"></i>&nbsp; Telepon
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @if($find->MobilePhone)
+                                        <tr>
+                                            <td>{{ $find->MobilePhone }}</td>
+                                            <td>
+                                                <a class="btn btn-success" href="https://wa.me/62{{ $find->MobilePhone }}" target="_blank">
                                                     <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>82276743545</td>
-                                            <td>
-                                                <a class="btn btn-success" href="wahtsapp.com" target="_blank">
-                                                    <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>82276743545</td>
-                                            <td>
-                                                <a class="btn btn-success" href="wahtsapp.com" target="_blank">
-                                                    <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -236,9 +245,9 @@
                                     <tbody>
                                         <tr>
                                             <td class="font-semibold">Tipe Customer</td>
-                                            <td></td>
+                                            <td>: {{ $find->CustomerType }}</td>
                                             <td class="font-semibold">Car Model Name</td>
-                                            <td></td>
+                                            <td>: {{ $find->TipeKendaraan }}</td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Decision Maker</td>
@@ -254,15 +263,15 @@
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Contact Person</td>
-                                            <td></td>
+                                            <td>: +{{ $find->NoTelp }}</td>
                                             <td class="font-semibold">Production Year</td>
-                                            <td></td>
+                                            <td>: {{ $find->TahunProduksi }}</td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Contact Phone</td>
-                                            <td></td>
+                                            <td>: {{ $find->MobilePhone }}</td>
                                             <td class="font-semibold">Vehicle Age</td>
-                                            <td></td>
+                                            <td>: {{ date('Y')-$find->TahunProduksi }} tahun</td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">NO. KTP/SIM</td>
@@ -272,7 +281,7 @@
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Birthday Date</td>
-                                            <td></td>
+                                            <td>: {{ $find->Birthday }}</td>
                                             <td class="font-semibold">SPV Sales Name</td>
                                             <td></td>
                                         </tr>
@@ -290,19 +299,19 @@
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Favorite Drink</td>
-                                            <td></td>
+                                            <td>: {{ $find->MinumanKesukaan }}</td>
                                             <td class="font-semibold">Program Service</td>
-                                            <td></td>
+                                            <td>: {{ $find->JobGrouping }}</td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Favorite Food</td>
-                                            <td></td>
+                                            <td>: {{ $find->MakananKesukaan }}</td>
                                             <td class="font-semibold">Extended Service</td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Hobby</td>
-                                            <td></td>
+                                            <td>: {{ $find->Interest }}</td>
                                             <td class="font-semibold">Extended Warranty</td>
                                             <td></td>
                                         </tr>
