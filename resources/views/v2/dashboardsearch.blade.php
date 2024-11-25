@@ -191,9 +191,17 @@
                                         @if($find->MobilePhone)
                                         <tr>
                                             <td>{{ $find->MobilePhone }}</td>
-                                            <td>
-                                                <a class="btn btn-success" href="https://wa.me/62{{ $find->MobilePhone }}" target="_blank">
-                                                    <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
+                                            <td class="justify-around flex">
+                                                <a href="tel:+{{ $find->NoTelp }}" target="_blank">
+                                                    <button class="btn btn-primary w-full">
+                                                        <i class="bi bi-telephone"></i>&nbsp; Telepon
+                                                    </button>
+                                                </a>
+                                                &nbsp;
+                                                <a href="https://wa.me/62{{ $find->MobilePhone }}" target="_blank">
+                                                    <button class="btn btn-success">
+                                                        <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
+                                                    </button>
                                                 </a>
                                             </td>
                                         </tr>
@@ -251,7 +259,7 @@
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Decision Maker</td>
-                                            <td></td>
+                                            <td>: {{ $dbcleansing->decision_maker }}</td>
                                             <td class="font-semibold">Code/Color</td>
                                             <td></td>
                                         </tr>

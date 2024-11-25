@@ -49,7 +49,8 @@ class HomeController extends Controller
         $findfriend = DB::table('masterdata')->where('dummy', $dicari)->orwhere('PoliceRegNo', $dicari)->orwhere('CustomerID', $idken)->orderby('id', 'desc')->distinct('PoliceRegNo', 'EquipmentNo', 'TipeKendaraan', 'TahunProduksi', 'NextPotency')->get();
         $modal = 0;
         if ($hitung > 0) {
-            return view('v2.dashboardsearch', ['dicari' => $dicari, 'hitung' => $hitung, 'hitung_kendaraan' => $hitung_kendaraan, 'hitung_pengguna' => $hitung_pengguna, 'find' => $find, 'friend' => $findfriend, 'modalempty' => $modal]);
+            $data_extend_cleansing = DB::table('data_cleansing')->where('police_reg_no',$find->PoliceRegNo)->orderBy('id','desc')->first();
+            return view('v2.dashboardsearch', ['dicari' => $dicari, 'hitung' => $hitung, 'hitung_kendaraan' => $hitung_kendaraan, 'hitung_pengguna' => $hitung_pengguna, 'find' => $find,  'dbcleansing' => $data_extend_cleansing, 'friend' => $findfriend, 'modalempty' => $modal]);
         } else {
             $modal = "showalertempty";
             return view('v2.dashboardsearch', ['dicari' => $dicari, 'hitung_kendaraan' => $hitung_kendaraan, 'hitung_pengguna' => $hitung_pengguna, 'modalempty' => $modal]);
