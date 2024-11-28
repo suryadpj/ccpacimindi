@@ -52,4 +52,19 @@ class HomeController extends Controller
             return view('v2.dashboardsearch', ['dicari' => $dicari, 'find' => $find, 'jumlah' => $findallcount, 'findall' => $findall, 'gbsb' =>$gbsb, 'pkbfunneling' =>$pkbfunneling, 'pkbfunnelingrec' =>$pkbfunnelingrec, 'dec' => $dec, 'tintouch' => $tintouch, 'voc' => $voc,'modalempty' => $modal]);
         }
     }
+
+    public function update_interest(request $request)
+    {
+
+        $data_user = Auth::user();
+        $form_data = array(
+            'minuman' => $request->drink,
+            'makanan' => $request->food,
+            'interest' => $request->interest,
+        );
+
+        DB::table('voc')->where('police_reg_no',$request->nopol)->update($form_data);
+
+        return Redirect::back();
+    }
 }

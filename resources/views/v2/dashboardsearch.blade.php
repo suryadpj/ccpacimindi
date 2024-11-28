@@ -315,6 +315,7 @@
                         </div>
                         <div class="panel h-full sm:col-span-2 xl:col-span-1">
                             <form action="update_interest" method="post">
+                                <input type="hidden" name="nopol" value="{{ $find->police_reg_no }}">
                                 <div class="table-responsive">
                                     <table class="table-hover">
                                         <tbody>
@@ -386,21 +387,21 @@
                                             </tr>
                                             <tr>
                                                 <td class="font-semibold">Favorite Drink</td>
-                                                <td><input type="text" placeholder="Some Text..." class="form-input"
+                                                <td><input type="text" name="drink" placeholder="Some Text..." class="form-input"
                                                         value="{{ $voc->minuman ?? '-' }}" required /></td>
                                                 <td class="font-semibold">Program Service</td>
                                                 <td>{{ $gbsb->unit ?? '-' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="font-semibold">Favorite Food</td>
-                                                <td><input type="text" placeholder="Some Text..." class="form-input"
+                                                <td><input type="text" name="food" placeholder="Some Text..." class="form-input"
                                                         value="{{ $voc->makanan ?? '-' }}" required /></td>
                                                 <td class="font-semibold">Extended Service</td>
                                                 <td></td>
                                             </tr>
                                             <tr>
                                                 <td class="font-semibold">Hobby</td>
-                                                <td><input type="text" placeholder="Some Text..." class="form-input"
+                                                <td><input type="text" name="interest" placeholder="Some Text..." class="form-input"
                                                         value="{{ $voc->interest ?? '-' }}" required /></td>
                                                 <td class="font-semibold">Extended Warranty</td>
                                                 <td></td>
@@ -627,7 +628,7 @@
                             @if (isset($pkbfunnelingrec))
                                 @foreach ($pkbfunnelingrec as $a)
                                     <tr>
-                                        <td class="!text-center">{{ $a->service_category }}</td>
+                                        <td class="!text-center">{{ $a->service_kategori }}</td>
                                         <td class="!text-center">{{ $a->lookup_job }}</td>
                                         <td class="!text-center">{{ $a->pkb_Date }}</td>
                                         <td class="!text-center">{{ $a->operation_desc }}</td>
@@ -670,7 +671,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (isset($pkbfunnelingrec))
+                                {{-- @if (isset($pkbfunnelingrec))
                                     @foreach ($pkbfunnelingrec as $a)
                                         <tr>
                                             <td class="!text-center">{{ $a->service_category }}</td>
@@ -682,7 +683,7 @@
                                             <td class="!text-center">{{ $a->mekanik }}</td>
                                         </tr>
                                     @endforeach
-                                @else
+                                @else --}}
                                 <tr>
                                     <td class="!text-center">-</td>
                                     <td class="!text-center">-</td>
