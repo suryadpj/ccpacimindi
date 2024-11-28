@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Voc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -57,14 +58,28 @@ class HomeController extends Controller
     {
 
         $data_user = Auth::user();
-        $form_data = array(
-            'minuman' => $request->drink,
-            'makanan' => $request->food,
-            'interest' => $request->interest,
-        );
 
-        DB::table('voc')->where('police_reg_no',$request->nopol)->update($form_data);
-
-        return Redirect::back();
+        $count = DB::table('voc')->where('police_reg_no',$request->nopol)->count();
+        if($count > 0) {
+            $form_data = array(
+                'minuman' => $request->drink,
+                'makanan' => $request->food,
+                'interest' => $request->interest,
+            );
+    
+            DB::table('voc')->where('police_reg_no',$request->nopol)->update($form_data);
+    
+        } else {
+            $insertnew = new Voc;
+            $insertnew->IDUser = $data_user->id;
+            $insertnew->police_reg_no = $request->nopol;
+            $insertnew->minuman = $request->drink;
+            $insertnew->makanan = $request->food;
+            $insertnew->interest = $request->drinkinterest;
+    
+            $insertnew->save();
+        }
+        return redirect()->back()->with('message', 'IT WORKS!');
+        // return redirect('caridata?search='.$request->nopol);
     }
 }
