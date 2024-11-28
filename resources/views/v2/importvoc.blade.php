@@ -5,7 +5,7 @@
 @endsection
 
 @section('judul-header')
-Import Voc
+    Import Voc
 @endsection
 
 @section('content')
@@ -59,8 +59,8 @@ Import Voc
                                             <div class="mt-8 flex items-center justify-end">
                                                 <button type="button" class="btn btn-outline-danger"
                                                     @click="toggle">Discard</button>
-                                                <button type="submit" id="action_button" class="btn btn-primary ltr:ml-4 rtl:mr-4"
-                                                    >Save</button>
+                                                <button type="submit" id="action_button"
+                                                    class="btn btn-primary ltr:ml-4 rtl:mr-4">Save</button>
                                             </div>
                                         </div>
                                     </form>
@@ -72,7 +72,6 @@ Import Voc
             </div>
         </div>
         <div class="invoice-table">
-            <table id="myTable" class="whitespace-nowrap"></table>
             <table id="tbl_list" class="table-auto border-collapse border border-slate-300" cellspacing="0" width="100%">
                 <thead>
                     <tr>
@@ -98,6 +97,34 @@ Import Voc
             var oTable = $('#tbl_list').DataTable({
                 processing: true,
                 serverSide: true,
+                responsive: true,
+                layout: {
+                    topStart: {
+                        buttons: [{
+                                extend: 'copyHtml5',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4]
+                                },
+                                title: 'Data VOC',
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                exportOptions: {
+                                    columns: [0, 2, 3, 4]
+                                },
+                                title: 'Data VOC',
+                                "action": newexportaction
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                exportOptions: {
+                                    columns: [0, 1, 2]
+                                },
+                                title: 'Data VOC',
+                            }
+                        ],
+                    }
+                },
                 ajax: '{{ url()->current() }}',
                 columns: [{
                         data: 'police_reg_no',
@@ -121,6 +148,55 @@ Import Voc
                     },
                 ]
             });
+
+            function newexportaction(e, dt, button, config) {
+                var self = this;
+                var oldStart = dt.settings()[0]._iDisplayStart;
+                dt.one('preXhr', function(e, s, data) {
+                    // Just this once, load all data from the server...
+                    data.start = 0;
+                    data.length = 2147483647;
+                    dt.one('preDraw', function(e, settings) {
+                        // Call the original action function
+                        if (button[0].className.indexOf('buttons-copy') >= 0) {
+                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button,
+                                config);
+                        } else if (button[0].className.indexOf('buttons-excel') >= 0) {
+                            $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
+                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt,
+                                    button, config) :
+                                $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt,
+                                    button, config);
+                        } else if (button[0].className.indexOf('buttons-csv') >= 0) {
+                            $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
+                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button,
+                                    config) :
+                                $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button,
+                                    config);
+                        } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
+                            $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
+                                $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button,
+                                    config) :
+                                $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button,
+                                    config);
+                        } else if (button[0].className.indexOf('buttons-print') >= 0) {
+                            $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
+                        }
+                        dt.one('preXhr', function(e, s, data) {
+                            // DataTables thinks the first item displayed is index 0, but we're not drawing that.
+                            // Set the property to what it was before exporting.
+                            settings._iDisplayStart = oldStart;
+                            data.start = oldStart;
+                        });
+                        // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
+                        setTimeout(dt.ajax.reload, 0);
+                        // Prevent rendering of the full data to the DOM
+                        return false;
+                    });
+                });
+                // Requery the server with the new one-time export settings
+                dt.ajax.reload();
+            }
 
             $('#sample_form2').on('submit', function(event) {
                 event.preventDefault();
