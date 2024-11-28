@@ -31,10 +31,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ $find->EquipmentNo }}</td>
-                                <td>{{ $find->PoliceRegNo }}</td>
+                                <td>{{ $find->equipment_no ?? 'Not Register' }}</td>
+                                <td>{{ $find->police_reg_no }}</td>
                                 <td> PUNCTUAL</td>
-                                <td>{{ $find->InitialStatus }}</td>
+                                <td>-</td>
                             </tr>
                         </tbody>
                     </table>
@@ -124,25 +124,22 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{ $find->CustomerID }}</td>
-                                    <td>{{ $find->CustomerName }}</td>
-                                    <td>{{ $find->QttVIN }}</td>
-                                    <td>{{ $find->TipeKendaraan }}</td>
-                                    <td>{{ $find->CustomerType }}</td>
-                                    <td>@switch($find->CustomerClass)
-                                        @case(0)
-                                            BRONZE
-                                        @break
-                                        @case(3)
-                                            BRONZE
-                                        @break
-                                        @case(2)
-                                            SILVER
-                                        @break
-                                        @case(1)
-                                            GOLD
-                                        @break                                           
-                                    @endswitch</td>
+                                    <td>{{ $find->cust_id ?? 'Not Register' }}</td>
+                                    <td>
+                                        @if ($find->customer_name)
+                                            {{ $find->customer_name }}
+                                        @elseif($pkbfunneling->customer_name)
+                                            {{ $pkbfunneling->customer_name }}
+                                        @elseif($dec->potensial_cust)
+                                            {{ $dec->potensial_cust }}
+                                        @else
+                                            Not Register
+                                        @endif
+                                    </td>
+                                    <td>{{ $jumlah }}</td>
+                                    <td>{{ $pkbfunneling->tipe_kendaraan ?? '-' }}</td>
+                                    <td>{{ $pkbfunneling->fleet_retail ?? '-' }}</td>
+                                    <td>{{ $find->class }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -162,12 +159,30 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>RING @if($find->RingArea > 0) {{ $find->RingArea }} @else 0 @endif</td>
-                                    <td>{{ $find->Address }}</td>
-                                    <td>BANDUNG</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
+                                    <td>RING 1</td>
+                                    <td>
+                                        @if ($find->customer_address)
+                                            {{ $find->customer_address }}
+                                        @elseif($pkbfunneling->customer_address)
+                                            {{ $pkbfunneling->customer_address }}
+                                        @elseif($dec->address)
+                                            {{ $dec->address }}
+                                        @else
+                                            Not Register
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @isset($str->a)
+                                            @if (Str::of($dec->police_reg_no)->limit(1) == 'B')
+                                                BANDUNG
+                                            @else
+                                                LUAR KOTA
+                                            @endif
+                                        @endisset
+                                    </td>
+                                    <td>{{ $dec->owner_district ?? 'Not Register' }}</td>
+                                    <td>{{ $pkbfunneling->pembelian_asal ?? 'Not Register' }}</td>
+                                    <td>{{ $gbsb->unit ?? 'Internal Program' }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -178,33 +193,60 @@
                             <div class="table-responsive">
                                 <table class="table-hover">
                                     <tbody>
-                                        @if($find->NoTelp)
-                                        <tr>
-                                            <td>+{{ $find->NoTelp }}</td>
-                                            <td>
-                                                <a class="btn btn-primary" href="tel:+{{ $find->NoTelp }}" target="_blank">
-                                                    <i class="bi bi-telephone"></i>&nbsp; Telepon
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endif
-                                        @if($find->MobilePhone)
-                                        <tr>
-                                            <td>{{ $find->MobilePhone }}</td>
-                                            <td class="justify-around flex">
-                                                <a href="tel:+{{ $find->NoTelp }}" target="_blank">
-                                                    <button class="btn btn-primary w-full">
+                                        @if ($find->contact_person)
+                                            <tr>
+                                                <td>+{{ $find->contact_person }}</td>
+                                                <td class="justify-around flex">
+                                                    <a class="btn btn-primary" href="tel:+{{ $find->contact_person }}"
+                                                        target="_blank">
                                                         <i class="bi bi-telephone"></i>&nbsp; Telepon
-                                                    </button>
-                                                </a>
-                                                &nbsp;
-                                                <a href="https://wa.me/62{{ $find->MobilePhone }}" target="_blank">
-                                                    <button class="btn btn-success">
-                                                        <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
-                                                    </button>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                                    </a>
+                                                    &nbsp;
+                                                    <a href="https://wa.me/62{{ $find->contact_person }}" target="_blank">
+                                                        <button class="btn btn-success">
+                                                            <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        @if ($find->decision_maker_phone)
+                                            <tr>
+                                                <td>{{ $find->decision_maker_phone }}</td>
+                                                <td class="justify-around flex">
+                                                    <a href="tel:+{{ $find->decision_maker_phone }}" target="_blank">
+                                                        <button class="btn btn-primary w-full">
+                                                            <i class="bi bi-telephone"></i>&nbsp; Telepon
+                                                        </button>
+                                                    </a>
+                                                    &nbsp;
+                                                    <a href="https://wa.me/62{{ $find->decision_maker_phone }}"
+                                                        target="_blank">
+                                                        <button class="btn btn-success">
+                                                            <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        @if ($find->contact_person_phone)
+                                            <tr>
+                                                <td>{{ $find->contact_person_phone }}</td>
+                                                <td class="justify-around flex">
+                                                    <a href="tel:+{{ $find->contact_person_phone }}" target="_blank">
+                                                        <button class="btn btn-primary w-full">
+                                                            <i class="bi bi-telephone"></i>&nbsp; Telepon
+                                                        </button>
+                                                    </a>
+                                                    &nbsp;
+                                                    <a href="https://wa.me/62{{ $find->contact_person_phone }}"
+                                                        target="_blank">
+                                                        <button class="btn btn-success">
+                                                            <i class="bi bi-whatsapp"></i>&nbsp; Whatsapp
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
                                         @endif
                                     </tbody>
                                 </table>
@@ -221,111 +263,158 @@
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Nama Leasing</td>
-                                            <td></td>
+                                            <td>{{ $dec->financing_company ?? '' }}</td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Nama Asuransi</td>
-                                            <td></td>
+                                            <td>{{ $dec->insurance ?? '' }}</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-semibold">Jenia Asuransi</td>
-                                            <td></td>
+                                            <td class="font-semibold">Jenis Asuransi</td>
+                                            <td>{{ $dec->insurance_type ?? '' }}</td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">All Risk Ex. Date</td>
-                                            <td></td>
+                                            <td>
+                                                @if (isset($dec->delivery_date))
+                                                    {{ $dec->delivery_date->addMonths(1) }}
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Insurance Ex. Date</td>
-                                            <td></td>
+                                            <td>
+                                                @if (isset($dec->delivery_date))
+                                                    {{ $dec->delivery_date->addDays($dec->tlo_period) }}
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Insurance Status</td>
-                                            <td></td>
+                                            <td>
+                                                @if (isset($dec->insurance_type) && $dec->insurance_type == 'combination')
+                                                    @if (sset($dec->delivery_date) && $dec->delivery_date->addMonths(1) < date('Y-m-d'))
+                                                        {{ $insurance_status = 'expired' }}
+                                                    @else
+                                                        {{ $insurance_status = 'aktif' }}
+                                                    @endif
+                                                @elseif (isset($dec->insurance_type))
+                                                    @if (isset($dec->delivery_date) && $dec->delivery_date->addDays($dec->tlo_period) < date('Y-m-d'))
+                                                        {{ $insurance_status = 'expired' }}
+                                                    @else
+                                                        {{ $insurance_status = 'akti' }}
+                                                    @endif
+                                                @else
+                                                    {{ $insurance_status = '-' }}
+                                                @endif
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="panel h-full sm:col-span-2 xl:col-span-1">
-                            <div class="table-responsive">
-                                <table class="table-hover">
-                                    <tbody>
-                                        <tr>
-                                            <td class="font-semibold">Tipe Customer</td>
-                                            <td>: {{ $find->CustomerType }}</td>
-                                            <td class="font-semibold">Car Model Name</td>
-                                            <td>: {{ $find->TipeKendaraan }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Decision Maker</td>
-                                            <td>: {{ $dbcleansing->decision_maker }}</td>
-                                            <td class="font-semibold">Code/Color</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Decision Phone</td>
-                                            <td></td>
-                                            <td class="font-semibold">Delivery Date</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Contact Person</td>
-                                            <td>: +{{ $find->NoTelp }}</td>
-                                            <td class="font-semibold">Production Year</td>
-                                            <td>: {{ $find->TahunProduksi }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Contact Phone</td>
-                                            <td>: {{ $find->MobilePhone }}</td>
-                                            <td class="font-semibold">Vehicle Age</td>
-                                            <td>: {{ date('Y')-$find->TahunProduksi }} tahun</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">NO. KTP/SIM</td>
-                                            <td></td>
-                                            <td class="font-semibold">Salesman Name</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Birthday Date</td>
-                                            <td>: {{ $find->Birthday }}</td>
-                                            <td class="font-semibold">SPV Sales Name</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Gender / JK</td>
-                                            <td></td>
-                                            <td class="font-semibold">T-Intouch Status</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Customer JOB</td>
-                                            <td></td>
-                                            <td class="font-semibold">T-Intouch Reg. Date</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Favorite Drink</td>
-                                            <td>: {{ $find->MinumanKesukaan }}</td>
-                                            <td class="font-semibold">Program Service</td>
-                                            <td>: {{ $find->JobGrouping }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Favorite Food</td>
-                                            <td>: {{ $find->MakananKesukaan }}</td>
-                                            <td class="font-semibold">Extended Service</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-semibold">Hobby</td>
-                                            <td>: {{ $find->Interest }}</td>
-                                            <td class="font-semibold">Extended Warranty</td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <form action="update_interest" method="post">
+                                <div class="table-responsive">
+                                    <table class="table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <td class="font-semibold">Tipe Customer</td>
+                                                <td>: {{ $pkbfunneling->fleet_retail ?? '' }}</td>
+                                                <td class="font-semibold">Car Model Name</td>
+                                                <td>: {{ $pkbfunneling->tipe_kendaraan ?? '' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Decision Maker</td>
+                                                <td>: {{ $pkbfunneling->decision_maker ?? $find->decision_maker }}</td>
+                                                <td class="font-semibold">Code/Color</td>
+                                                <td>{{ $dec->description_color ?? '' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Decision Phone</td>
+                                                <td>{{ $find->decision_maker_phone }}</td>
+                                                <td class="font-semibold">Delivery Date</td>
+                                                <td>{{ $dec->delivery_date ?? '' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Contact Person</td>
+                                                <td>
+                                                    @if ($find->customer_name)
+                                                        {{ $find->customer_name }}
+                                                    @elseif($pkbfunneling->customer_name)
+                                                        {{ $pkbfunneling->customer_name }}
+                                                    @elseif($dec->potensial_cust)
+                                                        {{ $dec->potensial_cust }}
+                                                    @endif
+                                                </td>
+                                                <td class="font-semibold">Production Year</td>
+                                                <td>{{ $find->tahun_produksi ?? 'Not Register' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Contact Phone</td>
+                                                <td>{{ $find->contact_person_phone }}</td>
+                                                <td class="font-semibold">Vehicle Age</td>
+                                                <td>{{ $usia = date('Y') - $find->tahun_produksi }} tahun</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">NO. KTP/SIM</td>
+                                                <td>{{ $dec->identification_number ?? '-' }}</td>
+                                                <td class="font-semibold">Salesman Name</td>
+                                                <td>{{ $dec->sales ?? '' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Birthday Date</td>
+                                                <td>{{ $dec->birth_date ?? '-' }}</td>
+                                                <td class="font-semibold">SPV Sales Name</td>
+                                                <td>{{ $dec->parent_employee ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Gender / JK</td>
+                                                <td>{{ $dec->gender ?? '-' }}</td>
+                                                <td class="font-semibold">T-Intouch Status</td>
+                                                <td>
+                                                    @isset($tintouch->activation_date)
+                                                        {{ $tintouch->activation_date ? 'Registered' : 'Without T-Intouch' }}
+                                                    @endisset
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Customer JOB</td>
+                                                <td>{{ $dec->job_title ?? '' }}</td>
+                                                <td class="font-semibold">T-Intouch Reg. Date</td>
+                                                <td>{{ $tintouch->activation_date ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Favorite Drink</td>
+                                                <td><input type="text" placeholder="Some Text..." class="form-input"
+                                                        value="{{ $voc->minuman ?? '-' }}" required /></td>
+                                                <td class="font-semibold">Program Service</td>
+                                                <td>{{ $gbsb->unit ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Favorite Food</td>
+                                                <td><input type="text" placeholder="Some Text..." class="form-input"
+                                                        value="{{ $voc->makanan ?? '-' }}" required /></td>
+                                                <td class="font-semibold">Extended Service</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-semibold">Hobby</td>
+                                                <td><input type="text" placeholder="Some Text..." class="form-input"
+                                                        value="{{ $voc->interest ?? '-' }}" required /></td>
+                                                <td class="font-semibold">Extended Warranty</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <button type="submit" class="btn btn-primary mt-6">Update data
+                                                        interest</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="mb-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -340,11 +429,23 @@
                                     <tbody>
                                         <tr>
                                             <td class="font-semibold">Potency Insurance</td>
-                                            <td>Tawarkan Asuransi</td>
+                                            <td>
+                                                @if ($insurance_status == 'expired')
+                                                    Perpanjang Asuransi
+                                                @else
+                                                    Tawarkan Asuransi
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Test Drive & Trade IN</td>
-                                            <td>Tawarkan Tes Drive</td>
+                                            <td>
+                                                @if ($usia > 2.5 && $usia < 4.9)
+                                                    Tawarkan Tes Drive
+                                                @else
+                                                    Tawarkan Tes Drive dan Trade IN
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="font-semibold">Extended STNK</td>
@@ -523,33 +624,29 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if (isset($pkbfunnelingrec))
+                                @foreach ($pkbfunnelingrec as $a)
+                                    <tr>
+                                        <td class="!text-center">{{ $a->service_category }}</td>
+                                        <td class="!text-center">{{ $a->lookup_job }}</td>
+                                        <td class="!text-center">{{ $a->pkb_Date }}</td>
+                                        <td class="!text-center">{{ $a->operation_desc }}</td>
+                                        <td class="!text-center">{{ $a->km }} KM</td>
+                                        <td class="!text-center">{{ $a->sa }}</td>
+                                        <td class="!text-center">{{ $a->mekanik }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
                             <tr>
-                                <td class="!text-center">SBE</td>
-                                <td class="!text-center">90K</td>
-                                <td class="!text-center">31 Jul 2023</td>
-                                <td class="!text-center">Service Berkala 90.000 Km</td>
-                                <td class="!text-center">94244 KM</td>
-                                <td class="!text-center">DIDIN</td>
-                                <td class="!text-center">SEPTIAN HADIYANTO</td>
+                                <td class="!text-center">-</td>
+                                <td class="!text-center">-</td>
+                                <td class="!text-center">-</td>
+                                <td class="!text-center">-</td>
+                                <td class="!text-center">-</td>
+                                <td class="!text-center">-</td>
+                                <td class="!text-center">-</td>
                             </tr>
-                            <tr>
-                                <td class="!text-center">SBE</td>
-                                <td class="!text-center">70K</td>
-                                <td class="!text-center">29 Des 2022</td>
-                                <td class="!text-center">Service Berkala 70.000 Km</td>
-                                <td class="!text-center">73285 KM</td>
-                                <td class="!text-center">DIDIN</td>
-                                <td class="!text-center">TAUFIK ISMAIL</td>
-                            </tr>
-                            <tr>
-                                <td class="!text-center">SBE</td>
-                                <td class="!text-center">50K</td>
-                                <td class="!text-center">18 Agu 2022</td>
-                                <td class="!text-center">Service Berkala 50.000 Km</td>
-                                <td class="!text-center">54088 KM</td>
-                                <td class="!text-center">DIDIN</td>
-                                <td class="!text-center">SBE</td>
-                            </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -557,14 +654,50 @@
             <template x-if="tab === 'contact'">
                 <div>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                        et
-                        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                        aliquip
-                        ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                        dolore eu
-                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                        deserunt mollit anim id est laborum.
+                        <table class="table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="!text-center"><b>No</b></th>
+                                    <th class="!text-center"><b>No Rangka</b></th>
+                                    <th class="!text-center"><b>Nopol</b></th>
+                                    <th class="!text-center"><b>Tahun Produksi</b></th>
+                                    <th class="!text-center"><b>Type Kendaraan</b></th>
+                                    <th class="!text-center"><b>Program Service</b></th>
+                                    <th class="!text-center"><b>Last Service Date</b></th>
+                                    <th class="!text-center"><b>Last Service Job</b></th>
+                                    <th class="!text-center"><b>Next Service Job</b></th>
+                                    <th class="!text-center"><b>Other information</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (isset($pkbfunnelingrec))
+                                    @foreach ($pkbfunnelingrec as $a)
+                                        <tr>
+                                            <td class="!text-center">{{ $a->service_category }}</td>
+                                            <td class="!text-center">{{ $a->lookup_job }}</td>
+                                            <td class="!text-center">{{ $a->pkb_Date }}</td>
+                                            <td class="!text-center">{{ $a->operation_desc }}</td>
+                                            <td class="!text-center">{{ $a->km }} KM</td>
+                                            <td class="!text-center">{{ $a->sa }}</td>
+                                            <td class="!text-center">{{ $a->mekanik }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                <tr>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                    <td class="!text-center">-</td>
+                                </tr>
+                                @endif
+                            </tbody>
+                        </table>
                     </p>
                 </div>
             </template>

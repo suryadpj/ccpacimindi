@@ -1,11 +1,11 @@
 @extends('v2.master')
 
 @section('judul')
-    Import Voc - Tunas Toyota Cimindi
+    Import Rekap Penjualan - Tunas Toyota Cimindi
 @endsection
 
 @section('judul-header')
-Import Voc
+Import Rekap Penjualan
 @endsection
 
 @section('content')
@@ -33,7 +33,7 @@ Import Voc
                                         @csrf
                                         <div
                                             class="flex items-center justify-between bg-[#fbfbfb] px-5 py-3 dark:bg-[#121c2c]">
-                                            <div class="text-lg font-bold">Update Data Voc</div>
+                                            <div class="text-lg font-bold">Update Data Rekap Penjualan</div>
                                             <button type="button" class="text-white-dark hover:text-dark" @click="toggle">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -76,11 +76,13 @@ Import Voc
             <table id="tbl_list" class="table-auto border-collapse border border-slate-300" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th>Cust Name</th>
-                        <th>Minuman</th>
-                        <th>Makanan</th>
-                        <th>Interest</th>
-                        <th>Yearmonth</th>
+                        <th>Vin</th>
+                        <th>PKB No.</th>
+                        <th>Pkb Date</th>
+                        <th>SA</th>
+                        <th>Total Revenue</th>
+                        <th>Total Discount</th>
+                        <th>Total Net</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,25 +101,34 @@ Import Voc
                 processing: true,
                 serverSide: true,
                 ajax: '{{ url()->current() }}',
-                columns: [{
-                        data: 'police_reg_no',
-                        name: 'police_reg_no'
+                columns: [
+                    {
+                        data: 'vin',
+                        name: 'vin'
                     },
                     {
-                        data: 'minuman',
-                        name: 'minuman'
+                        data: 'pkb_no',
+                        name: 'pkb_no'
                     },
                     {
-                        data: 'makanan',
-                        name: 'makanan'
+                        data: 'pkb_date',
+                        name: 'pkb_date'
                     },
                     {
-                        data: 'interest',
-                        name: 'interest'
+                        data: 'sa',
+                        name: 'sa'
                     },
                     {
-                        data: 'yearmonth',
-                        name: 'yearmonth'
+                        data: 'total_revenue',
+                        name: 'total_revenue'
+                    },
+                    {
+                        data: 'total_discount',
+                        name: 'total_discount'
+                    },
+                    {
+                        data: 'total_net',
+                        name: 'total_net'
                     },
                 ]
             });
@@ -125,7 +136,7 @@ Import Voc
             $('#sample_form2').on('submit', function(event) {
                 event.preventDefault();
                 $.ajax({
-                    url: "{{ route('importvoc.store') }}",
+                    url: "{{ route('importrekappenjualan.store') }}",
                     method: "POST",
                     data: new FormData(this),
                     contentType: false,
@@ -166,7 +177,7 @@ Import Voc
                                 title: 'Data berhasil disimpan',
                                 text: data.success
                             })
-                            window.location.href = "importvoc";
+                            window.location.href = "importrekappenjualan";
                         }
                     },
                     error: function(xhr, status, error) {

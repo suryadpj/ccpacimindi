@@ -35,25 +35,21 @@ class HomeController extends Controller
     public function caridata(request $request)
     {
         $dicari = $request->search;
-        $hitung_kendaraan = DB::table('masterdata')->count();
-        $hitung_pengguna = DB::table('masterdata')->distinct('EquipmentNo')->count('EquipmentNo');
-        $find = DB::table('masterdata')->where('dummy', $dicari)->orwhere('PoliceRegNo', $dicari)->orwhere('EquipmentNo', $dicari)->orderby('id', 'desc')->first();
-        $find2 = DB::table('masterdata')->where('dummy', $dicari)->orwhere('PoliceRegNo', $dicari)->orwhere('EquipmentNo', $dicari)->orderby('id', 'desc')->count();
-        if ($find2 == 0) {
+        $find = DB::table('data_cleansing')->where('equipment_no', $dicari)->orwhere('police_reg_no', $dicari)->orderby('id', 'desc')->first();
+        if (!$find) {
             $modal = "showalertempty";
-            return view('v2.home', ['dicari' => $dicari, 'hitung_kendaraan' => $hitung_kendaraan, 'hitung_pengguna' => $hitung_pengguna, 'modal' => $modal]);
-        }
-        $idken = $find->CustomerID;
-        $hitung = DB::table('masterdata')->where('dummy', $dicari)->orwhere('PoliceRegNo', $dicari)->orwhere('EquipmentNo', $dicari)->orderby('id', 'desc')->count();
-        $hitung = DB::table('masterdata')->where('dummy', $dicari)->orwhere('PoliceRegNo', $dicari)->orwhere('CustomerID', $idken)->orderby('id', 'desc')->distinct('PoliceRegNo', 'EquipmentNo', 'TipeKendaraan', 'TahunProduksi', 'NextPotency')->count();
-        $findfriend = DB::table('masterdata')->where('dummy', $dicari)->orwhere('PoliceRegNo', $dicari)->orwhere('CustomerID', $idken)->orderby('id', 'desc')->distinct('PoliceRegNo', 'EquipmentNo', 'TipeKendaraan', 'TahunProduksi', 'NextPotency')->get();
-        $modal = 0;
-        if ($hitung > 0) {
-            $data_extend_cleansing = DB::table('data_cleansing')->where('police_reg_no',$find->PoliceRegNo)->orderBy('id','desc')->first();
-            return view('v2.dashboardsearch', ['dicari' => $dicari, 'hitung' => $hitung, 'hitung_kendaraan' => $hitung_kendaraan, 'hitung_pengguna' => $hitung_pengguna, 'find' => $find,  'dbcleansing' => $data_extend_cleansing, 'friend' => $findfriend, 'modalempty' => $modal]);
+            return view('v2.home', ['dicari' => $dicari, 'modal' => $modal]);
         } else {
-            $modal = "showalertempty";
-            return view('v2.dashboardsearch', ['dicari' => $dicari, 'hitung_kendaraan' => $hitung_kendaraan, 'hitung_pengguna' => $hitung_pengguna, 'modalempty' => $modal]);
+            $modal = 0;
+            $findall = DB::table('data_cleansing')->where('police_reg_no', $find->police_reg_no)->distinct()->get();
+            $findallcount = DB::table('data_cleansing')->where('police_reg_no', $find->police_reg_no)->distinct()->count();
+            $gbsb = DB::table('gbsb')->where('vin',$find->equipment_no)->first();
+            $pkbfunneling = DB::table('pkbfunneling')->where('vin',$find->equipment_no)->first();
+            $pkbfunnelingrec = DB::table('pkbfunneling')->where('vin',$find->equipment_no)->orderBy('vincount','asc')->get();
+            $dec = DB::table('data_dec')->where('chassis_no',$find->equipment_no)->first();
+            $tintouch = DB::table('tintouch')->where('vin',$find->equipment_no)->first();
+            $voc = DB::table('voc')->where('police_reg_no',$find->police_reg_no)->first();
+            return view('v2.dashboardsearch', ['dicari' => $dicari, 'find' => $find, 'jumlah' => $findallcount, 'findall' => $findall, 'gbsb' =>$gbsb, 'pkbfunneling' =>$pkbfunneling, 'pkbfunnelingrec' =>$pkbfunnelingrec, 'dec' => $dec, 'tintouch' => $tintouch, 'voc' => $voc,'modalempty' => $modal]);
         }
     }
 }
