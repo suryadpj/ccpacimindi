@@ -696,7 +696,7 @@
                                     <td class="!text-center">-</td>
                                     <td class="!text-center">-</td>
                                 </tr>
-                                @endif
+                                {{-- @endif --}}
                             </tbody>
                         </table>
                     </p>
