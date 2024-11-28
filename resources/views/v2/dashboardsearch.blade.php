@@ -630,7 +630,7 @@
                                     <tr>
                                         <td class="!text-center">{{ $a->service_kategori }}</td>
                                         <td class="!text-center">{{ $a->lookup_job }}</td>
-                                        <td class="!text-center">{{ $a->pkb_Date }}</td>
+                                        <td class="!text-center">{{ $a->pkb_date }}</td>
                                         <td class="!text-center">{{ $a->operation_desc }}</td>
                                         <td class="!text-center">{{ $a->km }} KM</td>
                                         <td class="!text-center">{{ $a->sa }}</td>
